@@ -1,56 +1,13 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-
-  Route,
-  Link
-} from "react-router-dom";
-  
-import "../App.css";
-
-import {FaCalendarAlt, FaDoorOpen, FaUsers} from "react-icons/fa";
-
-import BookablesPage from "./Bookables/BookablesPage.js";
-import BookingsPage from "./Bookings/BookingsPage";
-import UsersPage from "./Users/UsersPage";
-import UserPicker from "./Users/UserPicker";
-
-export default function App () {
-  return (
-  <Router>
-    <div className="App">
-      <header>
-        <nav>
-          <ul>
-
-            <li>
-              <Link to="/bookings" className="btn btn-header">
-                <FaCalendarAlt/>
-                <span>Bookings</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/bookables" className="btn btn-header">
-                <FaDoorOpen/>
-                <span>Bookables</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/users" className="btn btn-header">
-                <FaUsers/>
-                <span>Users</span>
-              </Link>
-            </li>
-          </ul>
-        </nav>
-        
-        <UserPicker/>
-      </header>
-    <Routes>
-      <Route path="/bookings" element={<BookingsPage/>}/>
-      <Route path="/Bookables" element={<BookablesPage/>}/>
-      <Route path="/users" element={<UsersPage/>}/>
-    </Routes>
-</div>
-</Router>);
+import React, { useState, useEffect } from "react";
+export default function SayHello () {
+const greetings = ["Hello", "Ciao", "Hola", "こんにちは"];
+const [index, setIndex] = useState(0);
+useEffect(() => {
+document.title = greetings[index];
+});
+function updateGreeting () {
+setIndex(Math.floor(Math.random() * greetings.length));
 }
+return <button onClick={updateGreeting}>Say Hi</button>
+}
+  
