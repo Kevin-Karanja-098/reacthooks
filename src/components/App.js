@@ -1,28 +1,35 @@
 import React, { useState, useEffect } from "react";
-export default function WindowSize () {
 
-const [size, setSize] = useState(getSize());
-function getSize () {
-return {
-width: window.innerWidth,
-height: window.innerHeight
-};
+export default function UserStorage () {
 
-}
-const num = 7*size.width
-useEffect(() => {
+    const [user, setUser] = useState("Sanjiv");
 
-console.log('wow');
-function handleResize () {
-setSize(getSize());
+    useEffect(() => {
 
-}
-window.addEventListener('resize', handleResize);
+        const storedUser = window.localStorage.getItem("user");
 
-return () => window.removeEventListener('resize', handleResize);
+        console.log('amazing')
 
-},[]);
+        if (storedUser) {
 
-return <p>Width: {size.width}, Height: {size.height},</p>
+            setUser(storedUser);
 
+        }
+
+    },[]);
+
+    useEffect(() => {
+
+        window.localStorage.setItem("user", user);
+
+    },[user] );
+
+    return (
+        <select value={user} onChange={e => setUser(e.target.value)}>
+        <option>Jason</option>
+        <option>Akiko</option>
+        <option>Clarisse</option>
+        <option>Sanjiv</option>
+        </select>
+    );
 }
