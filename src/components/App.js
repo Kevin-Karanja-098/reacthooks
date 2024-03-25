@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from "react";
-export default function SayHello () {
-const greetings = ["Hello", "Ciao", "Hola", "こんにちは"];
-const [index, setIndex] = useState(0);
+export default function WindowSize () {
+
+const [size, setSize] = useState(getSize());
+function getSize () {
+return {
+width: window.innerWidth,
+height: window.innerHeight
+};
+
+}
+const num = 7*size.width
 useEffect(() => {
-document.title = greetings[index];
-});
-function updateGreeting () {
-setIndex(Math.floor(Math.random() * greetings.length));
+
+console.log('wow');
+function handleResize () {
+setSize(getSize());
+
 }
-return <button onClick={updateGreeting}>Say Hi</button>
+window.addEventListener('resize', handleResize);
+},);
+
+return <p>Width: {size.width}, Height: {size.height},</p>
+
 }
-  
