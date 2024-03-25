@@ -18,7 +18,10 @@ setSize(getSize());
 
 }
 window.addEventListener('resize', handleResize);
-},);
+
+return () => window.removeEventListener('resize', handleResize);
+
+},[]);
 
 return <p>Width: {size.width}, Height: {size.height},</p>
 
