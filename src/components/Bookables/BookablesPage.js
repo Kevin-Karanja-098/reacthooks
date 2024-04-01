@@ -5,5 +5,5 @@ export default function BookablesPage () {
     <main className="bookables-page">
       <BookablesList/>
     </main>
-  );
+  )
 }

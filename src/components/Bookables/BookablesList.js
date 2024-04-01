@@ -1,56 +1,83 @@
-import React, { useState } from 'react';
+import React, { useReducer, Fragment } from 'react';
 import { FaArrowRight } from "react-icons/fa";
 import data from "../../static.json";
+import reducer from "./reducer";
+const { bookables, sessions, days } = data;
+
+const initialState = {
+  group: "Rooms",
+  bookableIndex: 0,
+  hasDetails: true,
+  bookables
+};
 
 export default function BookablesList() {
-  const { bookables, sessions, days } = data;
-  
-  const [group, setGroup] = useState("Kit");
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { group, bookableIndex, bookables, hasDetails } = state;
+
   const bookablesInGroup = bookables.filter(b => b.group === group);
-  const [bookableIndex, setBookableIndex] = useState(0);
+
   const groups = [...new Set(bookables.map(b => b.group))];
 
   const bookable = bookablesInGroup[bookableIndex];
-  const [hasDetails, setHasDetails] = useState(false);
 
+  function changeGroup(e) {
+    dispatch({
+      type: "SET_GROUP",
+      payload: e.target.value
+    });
+  }
+  function changeBookable(selectedIndex) {
+    dispatch({
+      type: "SET_BOOKABLE",
+      payload: selectedIndex
+    });
+  }
   function nextBookable() {
-    setBookableIndex(i => (i + 1) % bookablesInGroup.length);
+    dispatch({ type: "NEXT_BOOKABLE" });
+  }
+  function toggleDetails() {
+    dispatch({ type: "TOGGLE_HAS_DETAILS" });
   }
 
-  return (
-    <div>
-      <select
-        value={group}
-        onChange={(e) => setGroup(e.target.value)}
-      >
-        {groups.map(g => <option value={g} key={g}>{g}</option>)}
-      </select>
 
-      <ul className="bookables items-list-nav">
-        {bookablesInGroup.map((b, i) => (
-          <li
-            key={b.id}
-            className={i === bookableIndex ? "selected" : null}
-          >
-            <button
-              className="btn"
-              onClick={() => setBookableIndex(i)}
-            >
-              {b.title}
-            </button>
-          </li>
-        ))}
-      </ul>
-      <p>
-        <button
-          className="btn"
-          onClick={nextBookable}
-          autoFocus
+  return (
+    <Fragment>
+      <div>
+        <select
+          value={group}
+          onChange={changeGroup}
         >
-          <FaArrowRight />
-          <span>Next</span>
-        </button>
-      </p>
+          {groups.map(g => <option value={g} key={g}>{g}</option>)}
+        </select>
+
+        <ul className="bookables items-list-nav">
+          {bookablesInGroup.map((b, i) => (
+            <li
+              key={b.id}
+              className={i === bookableIndex ? "selected" : null}
+            >
+              <button
+                className="btn"
+                onClick={() => changeBookable(i)}
+              >
+                {b.title}
+              </button>
+            </li>
+          ))}
+        </ul>
+        <p>
+          <button
+            className="btn"
+            onClick={nextBookable}
+            autoFocus
+          >
+            <FaArrowRight />
+            <span>Next</span>
+          </button>
+        </p>
+      </div>
 
       {bookable && (
         <div className="bookable-details">
@@ -64,7 +91,7 @@ export default function BookablesList() {
                   <input
                     type="checkbox"
                     checked={hasDetails}
-                    onChange={() => setHasDetails(has => !has)}
+                    onChange={toggleDetails}
                   />
                   Show Details
                 </label>
@@ -94,6 +121,6 @@ export default function BookablesList() {
           </div>
         </div>
       )}
-    </div>
+    </Fragment>
   );
 }
