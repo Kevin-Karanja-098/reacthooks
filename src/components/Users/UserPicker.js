@@ -1,10 +1,26 @@
-export default function UserPicker() {
-    return (
-      <select>
-        <option value="user1">User 1</option>
-        <option value="user2">User 2</option>
-        <option value="user3">User 3</option>
-        <option value="user4">User 4</option>
-      </select>
-    );
+import {useEffect, useState} from "react";
+import Spinner from "../UI/Spinner";
+
+export default function UserPicker () {
+  const [users, setUsers] = useState(null);
+
+  useEffect(() => {
+
+    fetch("http://localhost:3001/users")
+      .then(resp => resp.json())
+      .then(data => setUsers(data));
+
+  }, []);
+
+  if (users === null) {
+    return <Spinner/>
   }
+
+  return (
+    <select>
+      {users.map(u => (
+        <option key={u.id}>{u.name}</option>
+      ))}
+    </select>
+  );
+}
