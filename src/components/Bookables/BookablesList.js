@@ -1,79 +1,74 @@
-import {useReducer, useEffect, Fragment} from 'react';
+import {useReducer, useEffect, Fragment} from "react";
 import data from "../../static.json";
 import {FaArrowRight} from "react-icons/fa";
 import Spinner from "../UI/Spinner";
 import reducer from "./reducer";
-
 import getData from "../../utils/api";
 
 const {sessions, days} = data
 
 const initialState = {
-  group: "Rooms",
-  bookableIndex: 0,
-  hasDetails: true,
-  bookables: [],
-  isLoading: true,
-  error: false
+    group: "Rooms",
+    bookableIndex: 0,
+    hasDetails: true,
+    bookables: [],
+    isLoading: true,
+    error: false
 };
-
 export default function BookablesList () {
   const [state, dispatch] = useReducer(reducer, initialState);
-
   const {group, bookableIndex, bookables} = state;
   const {hasDetails, isLoading, error} = state;
-
   const bookablesInGroup = bookables.filter(b => b.group === group);
   const bookable = bookablesInGroup[bookableIndex];
   const groups = [...new Set(bookables.map(b => b.group))];
-
+  
   useEffect(() => {
-
+  
     dispatch({type: "FETCH_BOOKABLES_REQUEST"});
-
+  
     getData("http://localhost:3001/bookables")
+  
+    .then(bookables => dispatch({
+  
+      type: "FETCH_BOOKABLES_SUCCESS",
+  
+      payload: bookables
+  }))
+  
+  .catch(error => dispatch({
+  
+    type: "FETCH_BOOKABLES_ERROR",
+  
+    payload: error
+    }));
+}, []);
 
-      .then(bookables => dispatch({
-        type: "FETCH_BOOKABLES_SUCCESS",
-        payload: bookables
-      }))
-
-      .catch(error => dispatch({
-        type: "FETCH_BOOKABLES_ERROR",
-        payload: error
-      }));
-
-  }, []);
-
-  function changeGroup (e) {
+  function changeGroup(e) {
     dispatch({
       type: "SET_GROUP",
       payload: e.target.value
     });
   }
-
-  function changeBookable (selectedIndex) {
+  function changeBookable(selectedIndex) {
     dispatch({
       type: "SET_BOOKABLE",
       payload: selectedIndex
     });
   }
-
-  function nextBookable () {
-    dispatch({type: "NEXT_BOOKABLE"});
+  function nextBookable() {
+    dispatch({ type: "NEXT_BOOKABLE" });
   }
-
-  function toggleDetails () {
-    dispatch({type: "TOGGLE_HAS_DETAILS"});
+  function toggleDetails() {
+    dispatch({ type: "TOGGLE_HAS_DETAILS" });
   }
 
   if (error) {
     return <p>{error.message}</p>
-  }
-
-  if (isLoading) {
+    }
+    if (isLoading) {
     return <p><Spinner/> Loading bookables...</p>
-  }
+    }
 
   return (
     <Fragment>
@@ -106,7 +101,7 @@ export default function BookablesList () {
             onClick={nextBookable}
             autoFocus
           >
-            <FaArrowRight/>
+            <FaArrowRight />
             <span>Next</span>
           </button>
         </p>
