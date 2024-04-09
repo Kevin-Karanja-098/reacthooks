@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import Spinner from "../UI/Spinner";
+import Spinner from "../UI/Spinner.js";
 
 export default function UserPicker () {
   const [users, setUsers] = useState(null);
